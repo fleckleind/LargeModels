@@ -13,8 +13,8 @@ log(p_{\Phi_0+\Delta\Phi(\Theta)} (y_t \vert x, y_{< t}))
 ## Low-Rank Constraint
 The weight matrices in dense layers are allowed to have full-rank, and the pre-trained language models can still learn efficiently despite a low-dimensional reparametrization. As large number of parameters in not-full rank $W_0$ is redundant, use full-rank matrices $A, B$ to substitute. For $h=W_0x$, the modified forward pass yields:
 ```math
-h=W_0x+\Delta Wx=W_0x +BAx
+h=W_0x+\Delta Wx=W_0x +BAx\rightarrow (W_0+\frac{\alpha}{\gamma}AB)x
 ```
-where $A\in R^{r\times k}$ is random Gaussian initialization and zero for $B\in R^{d\times r}$ with rank $r\ll min(d,k)$. During training, $W_0$ is frozen and $A, B$ contain trainable parameters.
+where $A\in R^{r\times k}$ is random Gaussian initialization and zero for $B\in R^{d\times r}$ with rank $r\ll min(d,k)$. During training, $W_0$ is frozen and $A, B$ contain trainable parameters. The scale $\alpha/\gamma$ represents the importance of low-rank adaptation output.
 
 In the Transformer architecture, the LoRA is limited to only changing the attention weights for downstream tasks and freeze the MLP modules, with 4 times the number of trainable parameters given the same rank $r$ to the latter MLP modules.
