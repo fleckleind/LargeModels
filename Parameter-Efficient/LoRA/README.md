@@ -11,7 +11,7 @@ log(p_{\Phi_0+\Delta\Phi(\Theta)} (y_t \vert x, y_{< t}))
 ```
 
 ## Low-Rank Constraint
-The weight matrices in dense layers are allowed to have full-rank, and the pre-trained language models can still learn efficiently despite a low-dimensional reparametrization. For $h=W_0x$, the modified forward pass yields:
+The weight matrices in dense layers are allowed to have full-rank, and the pre-trained language models can still learn efficiently despite a low-dimensional reparametrization. As large number of parameters in not-full rank $W_0$ is redundant, use full-rank matrices $A, B$ to substitute. For $h=W_0x$, the modified forward pass yields:
 ```math
 h=W_0x+\Delta Wx=W_0x +BAx
 ```
