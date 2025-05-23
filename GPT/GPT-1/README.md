@@ -37,3 +37,10 @@ L_3(C)=L_2(C)+\lambda L_1(C)
 ## Task-Specific Input Transformation
 Traversal-Style Approach: convert structured inputs into an ordered sequence, to avoid making extensive changes to the architecture across tasks. All transformations include adding randomly initialized start and end tokens $(\langle s\rangle,\langle e\rangle)$, with text entailment, similarity, question Answering and commonsense reasoning tasks concatenating input tokens and label, and using delimiter token (\$) to separate.
 
+## Implementation Details
+Model largely follows the original transformer work:
+1. Decoder-only Transformer: 12 layers;
+2. Masked Self-Attention: 768 dimensional states, 12 heads;
+3. Position-wise FFN: 3072 dimensional inner states;
+4. Optimizer: Adam optimization scheme, with max learning rate of 2.5e-4, increased linearly from 0 over the first 2000 updates and annealed to 0 using a cosine schedule;
+5. Others: 100 epochs, 64 batches, contiguous sequences of 512 tokens, 0.1 attention dropout rate, GELU activation, byte pair encoding with 40000 byte pairs.
