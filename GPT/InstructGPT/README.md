@@ -3,5 +3,3 @@
 
 InstructGPT: align language models with user intent on a wide range of tasks by fine-tuning with human feedback, fine-tune GPT-3 using supervised learning on labeler-written prompts, then reinforcement learning from human feedback.
 
-
-
