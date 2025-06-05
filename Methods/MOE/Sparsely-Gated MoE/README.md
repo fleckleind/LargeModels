@@ -35,3 +35,14 @@ where $StandardNorm()$ is the standard normalization and $softplus$ is a smooth 
 StandardNorm(z)= \frac{z-\mu}{\sigma},\quad
 Softplus(z)= log(1+e^{x})
 ```
+
+## Balancing Expert Utilization
+Self-Reinforcing Imbalance: gating network always produces large weights for the same few experts. Sparsely-Gated MoE take a soft constraint approach on the batch-wose average of each gate.
+
+An additional loss $L_{importance}$ is equal to the square of the coefficient of variation of the set of importance values and multiplied by a hand-tuned scaling factor $w_{importance}$, relative to a batch of training examples to be the batchwise sum of the gate values for that expert, to encourage all experts to have equal importance.
+```math
+\begin{align}
+L_{importance}(X)
+&=w_{importance}\cdot CV(Importance(X))^2\\
+&=w_{importance}\cdot CV(\sum_{x\in X}G(x))^2\end{align}
+```
