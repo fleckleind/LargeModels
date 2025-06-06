@@ -11,16 +11,33 @@ Multi-Head Latent Attention: low-rank key-value joint compression, with original
 ```math
 c_t^{KV}=W^{DKV}h_t,\quad k_t^c=W^{UK}c_t^{KV},\quad v_t^c=W^{UV}c_t^{KV}
 ```
-where $c_t^{KV}\in R^{d_c}$ is the compressed latent vector for keys and values with compression dimension $d_c\ll d_hn_h$, $W^{DKV}\in R^{d_c\times d}$ as down-projection matrix, and $W^{UK},W^{UV}\in R^{d_hn_h\times d_c}$ as up-projection matrices, and the kv-cache only has $d_cl$ elements. Also, the queries also can perform the low-rank compression:
+where $c_t^{KV}\in R^{d_c}$ is the compressed latent vector for keys and values with compression dimension $d_c\ll d_hn_h$, $W^{DKV}\in R^{d_c\times d}$ as down-projection matrix, and $W^{UK},W^{UV}\in R^{d_hn_h\times d_c}$ as up-projection matrices, and the kv-cache only has $d_cl$ elements. Also, the queries also can perform the low-rank compression, with $c_t^Q\in R^{d_c'}$ and $d_c'\ll d_hn_h$:
 ```math
 c_t^Q=W^{DQ}h_t,\quad q_t^C=W^{UQ}c_t^Q
 ```
 
-### Decoupled Rotary Position Embedding
-RoPE: position-sensitive for both keys and queries, incompatible with low-rank KV compression and generating token between $W^Q$ and $W^{UK}$.
+Decoupled RoPE Strategy: use additional multi-head queries $q_{t,i}^R\in R^{d_h^R}$ and a shared $k_t^R\in R^{d_h^R}$, as original RoPE is positional-sensitive for both keys and queries and incompatibel with low-rank KV-cache with synthetic token between $W^Q$ and $W^{UK}$, with $q_t^R$ and $k_t^R$ computation:
+```math
+[q_{t,1}^R;q_{t,2}^R;\ldots;q_{t,n_h}^R]=q_t^R=RoPE(W^{QR}c_t^Q),\quad
+q_{t,i}=[q_{t,i}^C;q_{t,i}^R]
+```
+```math
+k_t^R=RoPE(W^{KR}h_t),\quad k_{t,i}=[k_{t,i}^C;k_{t}^R]
+```
+where $W^{QR}\in R^{d_h^Rn_h\times d_c'}$ and $W^{KR}\in R^{d_h^R\times d}$ produce the decouples queries and key, $RoPE(\cdot)$ is $RoPE$ matrices, and remaining MLA is:
+```math
+o_{t,i}=\sum_{j=1}^t Softmax(\frac{q_{t,i}^Tk_{j,i}}{\sqrt{d_h+d_h^R}})v_{j,i}^C,\quad
+u_t=W^O[o_{t,1};o_{t,2};\ldots;o_{t,n_h}]
+```
+with total KV-cache containing $(d_c+d_h^R)l$ elements, where $d_c$ is set to $4d_h$ and $d_h^R$ is set to $d_h/2$ in DeepSeek-V2. 
 
 
-auxiliary-loss-free strategy for load balancing, multi-token prediction objective
+
+
+
+
+
+
 
 ### Implementation Details
 DeepSeek LLM-7B: $n_{laer}=30$, $d_{model}=4096$, $n_{heads}=32$, $n_{kv\underline{ }heads}=32$, with 4096 context length, 2304 sequence batch size, $4.2e-4$ learning rate and $2.0T$ tokens.
