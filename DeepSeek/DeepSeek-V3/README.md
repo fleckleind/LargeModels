@@ -46,6 +46,11 @@ s_{i,t},& s_{i,t}\in Top-k(\{s_{j,t}\vert 1\leq j\leq N_r\}, K_r),\\
 ```math
 s_{i,t}=Softmax_i(u_t^\top e_i)
 ```
+Compared to the former DeepSeekMoE, DeepSeek-V3 applies a normalization among all selected affinity scores to produce the gating values, and use the sigmoid function to compute the affinity scores.
+```math
+g_{i,t}=g_{i,t}'/\sum_{j=1}^N g_{j,t}',\quad
+s_{i,t}=Sigmoid(u_t^\top e_i)
+```
 
 ### Implementation Details
 DeepSeek LLM-7B: $n_{laer}=30$, $d_{model}=4096$, $n_{heads}=32$, $n_{kv\underline{ }heads}=32$, with 4096 context length, 2304 sequence batch size, $4.2e-4$ learning rate and $2.0T$ tokens.
