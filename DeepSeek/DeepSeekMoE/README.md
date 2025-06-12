@@ -38,13 +38,4 @@ L_{DecBal}=\alpha_2\sum_{i=1}^Df_i'P_i'
 f_i'=\frac{1}{\lvert \epsilon_i\rvert}\sum_{j\in \epsilon_i}f_i,\quad
 P_i'=\sum_{j\in \epsilon_i} P_j
 ```
-
-Communication Balance Loss: balance the token communication of each device, even though the device-limited routing mechanism,
-```math
-L_{CommBal}=\alpha_3\sum_{i=1}^D f_i''P_i''
-```
-```math
-f_i''=\frac{D}{MT}\sum_{t=1}^T 1(\text{Token }t\text{ is sent to Device }i),\quad
-P_i''=\sum_{j\in\epsilon_i}P_j
-```
-The device-limited routing mechanism on the principle ensures that each device transmits at most $MT$ hidden states to other devices.
+where device-level balance factor $\alpha_2$ is a hyper-parameter, with a small $\alpha_1$ to mitigate the risk of routing collapse, and a large $\alpha_2$ to promote balanced computation across devices.
