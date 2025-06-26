@@ -1,7 +1,9 @@
 # HandsOnLLMs
 
 ## Understanding Language Models
-
+Large Language Models:
+1. Commonly Useed Models: gpt, llama, Qwen, DeepSeek
+2. LLM Tasks: natural language processing, code-related generation, creative writing.
 
 
 ## Using Pretrained Language Models
